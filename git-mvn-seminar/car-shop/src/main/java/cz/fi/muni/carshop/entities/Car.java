@@ -13,7 +13,10 @@ public class Car {
 
 	public Car(Color color, CarTypes type, int constructionYear, int price) {
 		super();
-		this.color = color;
+		
+                if (price < 0) throw new IllegalArgumentException();
+                
+                this.color = color;
 		this.type = type;
 		this.constructionYear = constructionYear;
 		this.price = price;
