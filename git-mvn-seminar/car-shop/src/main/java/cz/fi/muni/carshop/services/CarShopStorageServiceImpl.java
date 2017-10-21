@@ -43,7 +43,7 @@ public class CarShopStorageServiceImpl implements CarShopStorageService {
         List<Car> cars = allCars.get(car.getType());
         if (!cars.contains(car))
             throw new RequestedCarNotFoundException("Not found");
-        allCars.remove(car);
+        cars.remove(car);
     }
 
 }

@@ -1,5 +1,6 @@
 package cz.fi.muni.carshop;
 
+import com.sun.corba.se.impl.protocol.RequestCanceledException;
 import static org.hamcrest.Matchers.hasKey;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
@@ -13,9 +14,9 @@ import org.junit.Test;
 
 import org.junit.rules.ExpectedException;
 import org.junit.Rule;
-
 import cz.fi.muni.carshop.entities.Car;
 import cz.fi.muni.carshop.enums.CarTypes;
+import cz.fi.muni.carshop.exceptions.RequestedCarNotFoundException;
 import cz.fi.muni.carshop.services.CarShopStorageService;
 import cz.fi.muni.carshop.services.CarShopStorageServiceImpl;
 
@@ -64,5 +65,25 @@ public class CarShopStorageServiceTest {
 				hasSize(3));
 
 	}
+        
+        @Test
+        public void testSellCar() throws RequestedCarNotFoundException {
+            Car car = new Car(Color.BLACK, CarTypes.AUDI, 268, 22);
+            service.addCarToStorage(car);
+            
+            List<Car> cars = CarShopStorage.getInstancce().getCars().get(CarTypes.AUDI);
+            assert cars.contains(car);
+            
+            service.sellCar(car);
+            cars = CarShopStorage.getInstancce().getCars().get(CarTypes.AUDI);
+            assert !cars.contains(car);
+            
+        }
+        
+        @Test(expected = RequestedCarNotFoundException.class)
+        public void testSellCarEx() throws RequestedCarNotFoundException {
+            Car car = new Car(Color.BLACK, CarTypes.AUDI, 268, 22);
+            service.sellCar(car);
+        }
 
 }
